@@ -6,16 +6,8 @@ def login_positive
                   headers: {'Content-Type' => 'application/json'},
                   cookies: {},
                   payload: login_payload)
-  #response = RestClient::Request.execute(method:  :post,
-  #                                       url: "https://www.apimation.com/login",
-  #                                       headers: {'Content-Type' => 'application/json'},
-  #                                       cookies:{},
-  #                                       payload: login_payload)
-  #
-  #Check if 200 OK is received
+  #Check if 200 is OK
   assert_equal(200, response.code, "Login failed! Response : #{response}")
-
-
 
   response_hash = JSON.parse(response)
 
@@ -31,11 +23,7 @@ def login_positive
   @test_user.set_used_id(response_hash['user_id'])
   puts @test_user.user_id
   puts @test_user.session_cookie
-  # puts response_hash
-  # puts response.code
-  # puts response.headers
-  # puts response.cookies
-  # puts response.body
+
 end
 
 def check_personal_info
@@ -71,8 +59,10 @@ def login_wrong_password
 
   response_hash = JSON.parse(response)
 
+  #Check if error code is 002
   assert_equal('002', response_hash['error-code'], "Error code in response is not equal")
 
+  #Check if error message is received
   assert_equal('Username or password is not correct', response_hash['error-msg'], 'Error message is not correct!')
 
   @test_user.set_session_cookie(response.cookies)
@@ -87,11 +77,11 @@ def check_user_not_logged
   assert_equal(400, response.code, "Wrong error code received! Response: #{response}")
   response_hash = JSON.parse(response)
 
+  #Check if error code 001
   assert_equal('001', response_hash['error-code'], "Error code in response is not equal")
-
+  #Check if error message is received
   assert_equal('No session', response_hash['error-msg'], 'Error message is not correct!')
 
   @test_user.set_session_cookie(response.cookies)
-  #puts response
-  #puts response.code
+
 end
