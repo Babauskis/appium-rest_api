@@ -1,4 +1,4 @@
-
+require 'rest-client'
 
 def post(url, headers: {}, cookies: {}, payload: {})
   # RestClient.log = 'stdout'
